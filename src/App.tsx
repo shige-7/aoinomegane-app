@@ -11,6 +11,7 @@ const MATERIALS = [
   { key: '1.74', name: '1.74 (超高屈折)', index: 1.74 },
   { key: '1.76', name: '1.76 (超高屈折・東海)', index: 1.76 },
 ] as const;
+type Material = typeof MATERIALS[number];
 
 const DESIGNS = ['外面非球面','両面非球面','遠近','中近','近々'] as const;
 
@@ -111,8 +112,8 @@ export default function App(){
   // メーカー/設計/素材（左右素材は独立）
   const [maker, setMaker] = useState<'HOYA'|'東海光学'|'伊藤光学'>('HOYA');
   const [design, setDesign] = useState<typeof DESIGNS[number]>('外面非球面');
-  const [matR, setMatR] = useState(MATERIALS[1]);
-  const [matL, setMatL] = useState(MATERIALS[1]);
+  const [matR, setMatR] = useState<Material>(MATERIALS[1]);
+  const [matL, setMatL] = useState<Material>(MATERIALS[1]);
 
   // 最小CTはプリセット＋安全マージン（mm）
   const [safetyMargin, setSafetyMargin] = useState(0.2);
