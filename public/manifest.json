@@ -1,19 +1,14 @@
 {
-  "name": "強度近視セレクター",
-  "short_name": "近視セレクター",
+  "name": "\u8fd1\u8996\u30bb\u30ec\u30af\u30bf\u30fc v5",
+  "short_name": "\u8fd1\u8996v5",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0ea5e9",
+  "background_color": "#0b1220",
+  "theme_color": "#22d3ee",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]

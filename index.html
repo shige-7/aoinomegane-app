@@ -2,14 +2,56 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>強度近視セレクター</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>近視セレクター v5</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="/icon-192.png">
+    <style>
+      :root {
+        --bg:#0b1220; --card:#111827; --muted:#94a3b8; --brand:#22d3ee; --accent:#38bdf8;
+        --ring:#1f2937; --text:#e5e7eb; --text-weak:#cbd5e1;
+      }
+      * { box-sizing: border-box; }
+      html, body { height:100%; }
+      body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP"; background:linear-gradient(180deg, #0b1220, #0e1424 60%, #111827); color:var(--text); }
+      header { display:flex; align-items:center; gap:10px; padding:14px 16px; position:sticky; top:0; backdrop-filter: blur(8px); background:rgba(11,18,32,.7); border-bottom:1px solid #0f172a; z-index:10; }
+      header .logo { width:28px; height:28px; border-radius:8px; background: radial-gradient(circle at 30% 30%, var(--brand), var(--accent)); }
+      header .title { font-weight:700; letter-spacing:.02em; }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+      .stepper { display:flex; gap:10px; margin: 8px 0 16px; flex-wrap:wrap; }
+      .step { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid #1f2937; color:var(--text-weak); cursor:pointer; }
+      .step.active { background: linear-gradient(90deg, rgba(34,211,238,.15), rgba(56,189,248,.15)); color:var(--text); border-color:#1f2937; }
+      .grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+      .card { background:linear-gradient(180deg, #0f172a, #0b1220); border:1px solid #1f2937; border-radius:16px; padding:14px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+      .card h3 { margin:6px 0 10px; font-size:14px; color:var(--text-weak); font-weight:600; letter-spacing:.03em; }
+      .row { display:flex; gap:10px; align-items:center; }
+      label { font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+      input[type="number"], select, input[type="text"] {
+        width:100%; padding:10px 12px; border-radius:12px; border:1px solid #253042; background:#0b1220; color:var(--text);
+        outline:none;
+      }
+      input[type="range"] { width:100%; }
+      table { width:100%; border-collapse: collapse; }
+      th, td { border-bottom: 1px solid #1f2937; padding:10px 8px; text-align:right; font-variant-numeric: tabular-nums; }
+      th { color: var(--muted); font-weight:600; }
+      td:first-child, th:first-child { text-align:left; }
+      .btn { background: linear-gradient(90deg, var(--brand), var(--accent)); color:#001018; border:none; padding:12px 16px; border-radius:12px; font-weight:700; letter-spacing:.02em; cursor:pointer; }
+      .btn.secondary { background:#0b1220; color:var(--text); border:1px solid #253042; }
+      .pill { font-size:12px; color:var(--text-weak); padding:4px 8px; border-radius:999px; border:1px solid #253042; }
+      .bar { position: sticky; bottom: 8px; display:flex; gap:10px; justify-content:flex-end; padding:8px; background:transparent; }
+      .muted { color: var(--muted); font-size:12px; }
+      .cardlist { display:grid; gap:8px; }
+      .framecard { display:grid; grid-template-columns: 1fr auto; gap:8px; align-items:center; padding:12px; border:1px solid #1f2937; border-radius:12px; background: #0b1220; }
+      .framecard .meta { display:flex; gap:6px; flex-wrap:wrap; }
+    </style>
   </head>
   <body>
+    <header>
+      <div class="logo"></div>
+      <div class="title">近視セレクター v5</div>
+    </header>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
