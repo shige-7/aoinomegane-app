@@ -101,7 +101,6 @@ function parseFramesCsv(text:string){
 }
 
 export default function App(){
-  // 処方（左右）
   const [sphR, setSphR] = useState(-8.00);
   const [cylR, setCylR] = useState(-1.50);
   const [sphL, setSphL] = useState(-7.50);
@@ -109,23 +108,20 @@ export default function App(){
   const [pdR, setPdR] = useState(31);
   const [pdL, setPdL] = useState(31);
 
-  // メーカー/設計/素材（左右素材は独立）
   const [maker, setMaker] = useState<'HOYA'|'東海光学'|'伊藤光学'>('HOYA');
   const [design, setDesign] = useState<typeof DESIGNS[number]>('外面非球面');
   const [matR, setMatR] = useState<Material>(MATERIALS[1]);
   const [matL, setMatL] = useState<Material>(MATERIALS[1]);
 
-  // 最小CTはプリセット＋安全マージン（mm）
   const [safetyMargin, setSafetyMargin] = useState(0.2);
 
   const getBaseCT = (makerKey: keyof typeof CT_TABLE, designKey: string, matKey: string) => {
     const v = CT_TABLE[makerKey]?.[designKey]?.[matKey];
-    return typeof v === 'number' ? v : 1.5; // fallback
+    return typeof v === 'number' ? v : 1.5;
   };
   const minCTR = useMemo(()=> getBaseCT(maker, design, matR.key) + safetyMargin, [maker, design, matR, safetyMargin]);
   const minCTL = useMemo(()=> getBaseCT(maker, design, matL.key) + safetyMargin, [maker, design, matL, safetyMargin]);
 
-  // 仕上げ余裕・在庫・CSV
   const [allowance, setAllowance] = useState(2);
   const [frames, setFrames] = useState<Frame[]>(INITIAL_FRAMES);
   const [importSummary, setImportSummary] = useState('');
@@ -143,7 +139,6 @@ export default function App(){
       .sort((a,b)=> a.worst - b.worst);
   }, [frames, stockOnly, sphR, cylR, sphL, cylL, pdR, pdL, matR, matL, minCTR, minCTL, allowance]);
 
-  // PDF出力
   const [logo, setLogo] = useState<string | null>(null);
   const [storeName, setStoreName] = useState<string>('アオイノメガネ / AOINOMEGANE');
   const pdfRef = useRef<HTMLDivElement>(null);
@@ -168,8 +163,8 @@ export default function App(){
   const [tab, setTab] = useState<'list'|'compare'|'import'|'add'|'settings'>('list');
 
   return (
-    <div className="container">
-      <div className="grid">
+    <div className="container" style={{padding:16,maxWidth:1200,margin:'0 auto'}}>
+      <div style={{display:'grid',gap:12,gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))'}}>
         <div className="card">
           <div style={{fontWeight:600, marginBottom:8}}>右目</div>
           <div>SPH <input type="number" step={0.25} value={sphR} onChange={e=>setSphR(parseFloat(e.target.value))}/></div>
@@ -196,15 +191,15 @@ export default function App(){
               {DESIGNS.map(d=> <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
-          <div className="grid" style={{gridTemplateColumns:'1fr 1fr'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
             <div>右 素材
-              <select value={matR.key} onChange={e=>setMatR(MATERIALS.find(m=>m.key===e.target.value)!)}>
+              <select value={matR.key} onChange={e=>{ const next=MATERIALS.find(m=>m.key===e.target.value); if(next) setMatR(next); }}>
                 {MATERIALS.map(m=> <option key={m.key} value={m.key}>{m.name}</option>)}
               </select>
               <div className="muted">CT(右) = {(CT_TABLE[maker]?.[design]?.[matR.key] ?? 1.5).toFixed(1)} + {safetyMargin.toFixed(1)} = {(minCTR).toFixed(1)} mm</div>
             </div>
             <div>左 素材
-              <select value={matL.key} onChange={e=>setMatL(MATERIALS.find(m=>m.key===e.target.value)!)}>
+              <select value={matL.key} onChange={e=>{ const next=MATERIALS.find(m=>m.key===e.target.value); if(next) setMatL(next); }}>
                 {MATERIALS.map(m=> <option key={m.key} value={m.key}>{m.name}</option>)}
               </select>
               <div className="muted">CT(左) = {(CT_TABLE[maker]?.[design]?.[matL.key] ?? 1.5).toFixed(1)} + {safetyMargin.toFixed(1)} = {(minCTL).toFixed(1)} mm</div>
@@ -216,14 +211,14 @@ export default function App(){
           <div>仕上げ余裕 {allowance.toFixed(1)}mm
             <input type="range" min={1} max={4} step={0.5} value={allowance} onChange={e=>setAllowance(parseFloat(e.target.value))}/>
           </div>
-          <div className="flex" style={{marginTop:8}}>
-            <label className="flex"><input type="checkbox" checked={stockOnly} onChange={e=>setStockOnly(e.target.checked)}/> 在庫ありのみ</label>
+          <div style={{display:'flex',gap:8,alignItems:'center',marginTop:8}}>
+            <label style={{display:'flex',alignItems:'center',gap:6}}><input type="checkbox" checked={stockOnly} onChange={e=>setStockOnly(e.target.checked)}/> 在庫ありのみ</label>
             <button className="btn" onClick={exportPDF} style={{marginLeft:'auto'}}>見積PDFを保存</button>
           </div>
         </div>
       </div>
 
-      <div className="tabs">
+      <div style={{display:'flex',gap:8,margin:'12px 0',flexWrap:'wrap'}}>
         {['list','compare','import','add','settings'].map(t => (
           <button key={t} className={'tab ' + (t===tab?'active':'')} onClick={()=>setTab(t as any)}>
             {t==='list'?'一覧':t==='compare'?'素材/設計比較':t==='import'?'CSVインポート':t==='add'?'手動追加':'設定/ロゴ'}
@@ -234,7 +229,7 @@ export default function App(){
       <div className={tab==='list'?'':'hidden'}>
         <div className="card">
           <div ref={pdfRef}>
-            <div className="pdf-header">
+            <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:12}}>
               {logo && <img src={logo} style={{height:60}} />}
               <div>
                 <div style={{fontWeight:600}}>レンズ厚み・フレーム最適化 見積</div>
@@ -351,7 +346,7 @@ function QuickAdd({onAdd}:{onAdd:(f:Frame)=>void}){
   const [stock,setStock]=useState(1);
   return (
     <div style={{gridColumn:'1 / -1'}}>
-      <div className="grid" style={{gridTemplateColumns:'repeat(auto-fit, minmax(140px,1fr))'}}>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(140px,1fr))',gap:12}}>
         <div><div className="muted">ブランド/型</div><input value={brand} onChange={e=>setBrand(e.target.value)}/></div>
         <div><div className="muted">A</div><input type="number" value={A} onChange={e=>setA(parseFloat(e.target.value))}/></div>
         <div><div className="muted">B</div><input type="number" value={B} onChange={e=>setB(parseFloat(e.target.value))}/></div>
@@ -360,7 +355,7 @@ function QuickAdd({onAdd}:{onAdd:(f:Frame)=>void}){
         <div><div className="muted">カラー</div><input value={color} onChange={e=>setColor(e.target.value)}/></div>
         <div><div className="muted">在庫</div><input type="number" value={stock} onChange={e=>setStock(parseFloat(e.target.value))}/></div>
       </div>
-      <div className="flex" style={{marginTop:8}}>
+      <div style={{display:'flex',gap:8,marginTop:8}}>
         <button className="btn" onClick={()=> onAdd({ id: Math.random().toString(36).slice(2), brand, A, B, DBL, sku, color, stock })}>追加</button>
       </div>
     </div>
