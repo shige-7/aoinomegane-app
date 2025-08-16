@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Pencil } from "lucide-react";
 import logo from "./assets/logo.png";
@@ -32,11 +31,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-b from-pink-50 via-rose-50 to-sky-50">
+    <div className="min-h-screen p-6" style={{background:"linear-gradient(180deg, #fff7fb 0%, #fef6f8 35%, #f5fbff 100%)"}}>
       {!isEmbed && (
-        <header className="flex items-center gap-3 mb-6">
-          <img src={logo} alt="logo" className="h-10" />
-          <h1 className="text-xl font-bold text-rose-600">アオイノメガネ フレームセレクター</h1>
+        <header className="flex items-center gap-8 mb-6">
+          <img src={logo} alt="logo" style={{height:40}} />
+          <h1 style={{fontWeight:800, color:"#be123c"}}>アオイノメガネ フレームセレクター</h1>
         </header>
       )}
 
@@ -45,33 +44,24 @@ export default function App() {
         placeholder="🔎 ブランド / 型番で検索…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full mb-4 p-2 border rounded-lg"
+        style={{width:"100%", marginBottom:12, padding:"10px 12px", borderRadius:12, border:"1px solid #e5e7eb"}}
       />
 
-      <div className="grid gap-4">
+      <div style={{display:"grid", gap:12}}>
         {stockData
           .filter(item => item.brand.includes(search) || item.model.includes(search))
           .map(item => (
-          <div key={item.id} className="bg-white p-4 rounded-2xl shadow flex justify-between items-center">
+          <div key={item.id} style={{background:"#fff", padding:16, borderRadius:20, boxShadow:"0 8px 20px rgba(0,0,0,.06)", display:"flex", justifyContent:"space-between", alignItems:"center"}}>
             <div>
-              <p className="font-semibold">{item.brand} {item.model}</p>
-              <p className="text-sm text-gray-500">{item.color}</p>
-              <p className="text-sm">在庫: {item.stock}本</p>
-              {item.reorder && <p className="text-xs text-red-500">発注が必要です</p>}
+              <div style={{fontWeight:700}}>{item.brand} {item.model}</div>
+              <div style={{color:"#64748b", fontSize:12}}>{item.color}</div>
+              <div style={{fontSize:12}}>在庫: {item.stock}本</div>
+              {item.reorder && <div style={{fontSize:12, color:"#ef4444"}}>発注が必要です</div>}
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleEdit(item.id, "stock", item.stock + 1)}
-                className="px-2 py-1 bg-green-100 rounded"
-              >＋</button>
-              <button
-                onClick={() => handleEdit(item.id, "stock", Math.max(0, item.stock - 1))}
-                className="px-2 py-1 bg-red-100 rounded"
-              >－</button>
-              <button
-                onClick={() => handleEdit(item.id, "reorder", !item.reorder)}
-                className="p-1 bg-yellow-100 rounded"
-              ><Pencil size={16} /></button>
+            <div style={{display:"flex", gap:8}}>
+              <button onClick={() => handleEdit(item.id, "stock", item.stock + 1)} style={{padding:"6px 10px", background:"#ecfdf5", borderRadius:8}}>＋</button>
+              <button onClick={() => handleEdit(item.id, "stock", Math.max(0, item.stock - 1))} style={{padding:"6px 10px", background:"#fef2f2", borderRadius:8}}>－</button>
+              <button onClick={() => handleEdit(item.id, "reorder", !item.reorder)} style={{padding:6, background:"#fffbeb", borderRadius:8}}><Pencil size={16} /></button>
             </div>
           </div>
         ))}
